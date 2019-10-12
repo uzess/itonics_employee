@@ -1,0 +1,59 @@
+<?php
+/**
+* Implements hook_schema()
+* @see https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_schema/7.x  
+*/
+function itonics_employee_schema(){
+	$schema['employee'] = array(
+		'description' => 'Store information about itonics employee!',
+		'fields' => array(
+		'id' => array(
+		  'description' => 'Unique Employee ID!',
+		  'type' => 'serial',
+		  'not null' => TRUE,
+		),
+		'name' => array(
+		  'description' => 'Name of the employee!',
+		  'type' => 'varchar',
+		  'length' => '255',
+		  'not null' => TRUE,
+		),
+		'image' => array(
+		  'description' => 'Profile picture of the employee!',
+		  'type' => 'varchar',
+		  'length' => '255',
+		  'not null' => FALSE,
+		),
+		'address' => array(
+		  'description' => 'Address of the employee!',
+		  'type' => 'varchar',
+		  'length' => '255',
+		  'not null' => TRUE,
+		),
+		'gender' => array(
+		  'description' => 'Gender of the employee!',
+		  'type' => 'varchar',
+		  'length' => '255',
+		  'not null' => TRUE,
+		),
+		'email' => array(
+		  'description' => 'Email of the employee!',
+		  'type' => 'varchar',
+		  'length' => '255',
+		  'not null' => TRUE,
+		),
+		'projects' => array(
+		  'description' => 'Projects associalted of the employee!',
+		  'type' => 'text',
+		  'not null' => TRUE,
+		),
+		'additional_details' => array(
+		  'description' => 'Some other information about employee!',
+		  'type' => 'text',
+		  'not null' => TRUE,
+		),
+		),
+		'primary key' => array('id'),
+	);
+	return $schema;
+}

@@ -1,0 +1,55 @@
+<?php
+/**
+* Implements hook_menu
+* @see https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_menu/7.x
+*/
+function itonics_employee_menu(){
+	$items['admin/employee'] = array(
+		'title'            => 'Itonics Employees',
+		'description'      => 'Records for itonics employees',
+	    'page callback'    => 'drupal_get_form',
+	    'page arguments'   => array('itonics_employee_list_form'),
+	    'access arguments' => array('administer itonics employee'),
+	    'file'             => 'itonics_employee.list.inc'
+	);
+
+	$items['admin/employee/add'] = array(
+		'title'            => 'Add Employees',
+		'description'      => 'Add employees',
+	    'page callback'    => 'drupal_get_form',
+	    'page arguments'   => array('itonics_employee_add_form'),
+	    'access arguments' => array('administer itonics employee'),
+	    'file'             => 'itonics_employee.add.inc'
+	);
+
+	$items['admin/employee/edit'] = array(
+		'title'            => 'Edit Employee',
+		'description'      => 'Edit employee',
+	    'page callback'    => 'itonics_employee_edit',
+	    'access arguments' => array('administer itonics employee'),
+	    'file'             => 'itonics_employee.add.inc'
+	);
+	
+	return $items;
+}
+
+/**
+* Implements hook_permission
+* @see https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_permission/7.x
+*/
+function itonics_employee_permission(){
+	return array(
+		'administer itonics employee' => array(
+			'title' => t('Administer Itonics Employees'),
+		)
+	);
+}
+
+function itonics_employee_edit($id=false){
+	if( $id ){
+		$form = drupal_get_form('itonics_employee_add_form', $id);
+		return $form;
+	}else{
+		drupal_goto('admin/employee');
+	}
+}
