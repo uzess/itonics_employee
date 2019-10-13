@@ -2,9 +2,11 @@
 /**
 * Implements hook_schema()
 * @see https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_schema/7.x  
+* @return array
 */
+
 function itonics_employee_schema(){
-	$schema['employee'] = array(
+	$schema[Itonics_Employee_Model::$table] = array(
 		'description' => 'Store information about itonics employee!',
 		'fields' => array(
 		'id' => array(
