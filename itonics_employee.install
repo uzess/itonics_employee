@@ -6,7 +6,7 @@
 */
 
 function itonics_employee_schema(){
-	$schema[Itonics_Employee_Model::$table] = array(
+	$schema['employee'] = array(
 		'description' => 'Store information about itonics employee!',
 		'fields' => array(
 		'id' => array(
