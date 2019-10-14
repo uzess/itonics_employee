@@ -209,7 +209,7 @@ function itonics_employee_add_edit_form_submit($form, $form_state) {
 		}
 
 		#delete old file from the database if exists
-		if(isset($input['old_file'])){
+		if(isset($input['old_file']) && $input['old_file'] != $input['profile_picture']){
 			$old_file = file_load($input['old_file']);
 			if($old_file){
 				file_delete($old_file,true);

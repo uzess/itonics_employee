@@ -7,7 +7,7 @@ class Itonics_Employee_Model{
 
 	public static $table = 'employee';
 
-	protected static $limit = 20;
+	public static $limit = 3;
 
 	protected static $fields = 'e';
 

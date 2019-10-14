@@ -5,6 +5,15 @@
 */
 class Itonics_Employee_Helper{
 
+	public static function get_index($i){
+
+		$get   = drupal_get_query_parameters();
+		$page  = isset($get['page']) ? $get['page'] : 0;
+		$limit = Itonics_Employee_Model::$limit;
+
+		return ($page * $limit) + $i+1;
+	}
+
 	public static function menu( $slug ){
 
 		$path = array(

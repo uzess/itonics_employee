@@ -54,7 +54,7 @@ function itonics_employee_list_form($form, $form_state){
     	}
 
 		$options[$row->id] = array(
-			'sn'      => $i+1,
+			'sn'      => Itonics_Employee_Helper::get_index($i),
 			'profile_picture' => $img,
 			'name'    => $row->name,
 			'address' => ucfirst($row->address),
@@ -79,12 +79,14 @@ function itonics_employee_list_form($form, $form_state){
 		'#empty'   => t('No content available.'),
 	);
 
-	$form['submit'] = array(
-	   '#type'  => 'submit',
-	   '#value' => t('Delete'),
-	);
+   	if(count($results) > 0){
+		$form['submit'] = array(
+		   '#type'  => 'submit',
+		   '#value' => t('Delete'),
+		);
 
-	$form['pager'] = array('#markup' => theme('pager'));
+		$form['pager'] = array('#markup' => theme('pager'));
+   	}
 
 	return $form;
 }
