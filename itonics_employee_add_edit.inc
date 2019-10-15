@@ -146,7 +146,7 @@ function itonics_employee_add_edit_form_validate($form, &$form_state) {
 		form_set_error('gender', Itonics_Employee_Helper::msg(11));
 	}
 	foreach(['name','email','projects'] as $v){
-		$form_state['values'][$v] = check_plain( $form_state['values'][$v] );
+		$form_state['values'][$v] = filter_var($form_state['values'][$v], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 	}
 
 	$ai = $form_state['values']['additional_details']['value'];

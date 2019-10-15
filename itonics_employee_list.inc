@@ -56,16 +56,16 @@ function itonics_employee_list_form($form, $form_state){
 		$options[$row->id] = array(
 			'sn'      => Itonics_Employee_Helper::get_index($i),
 			'profile_picture' => $img,
-			'name'    => $row->name,
-			'address' => ucfirst($row->address),
-			'email'   => $row->email,
-			'gender'  => ucfirst($row->gender),
+			'name'    => check_plain($row->name),
+			'address' => ucfirst(check_plain($row->address)),
+			'email'   => check_plain($row->email),
+			'gender'  => ucfirst(check_plain($row->gender)),
 			'action'  => array(
 				'data' => array(
 					array(
 						'#type'  => 'link',
 						'#title' => t('View / Edit'),
-						'#href'  => Itonics_Employee_Helper::menu('edit') . '/' . $row->id,
+						'#href'  => Itonics_Employee_Helper::menu('edit') . '/' . check_plain($row->id),
 					)
 				)
 			)
