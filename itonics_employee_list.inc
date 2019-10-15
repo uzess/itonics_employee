@@ -1,14 +1,4 @@
 <?php
-# enqueue JS file to the module
-drupal_add_js(drupal_get_path('module', 'itonics_employee') . '/script.js', 'file');
-# Pass some translated strings to the script
-drupal_add_js(array(
-	'itonics_employee' => array(
-		'confirmation' => Itonics_Employee_Helper::msg(9)
-	)), 
-	array('type' => 'setting')
-);
-
 /**
 * Implements hook_form
 * @see https://api.drupal.org/api/drupal/modules%21node%21node.api.php/function/hook_form/7.x
@@ -22,71 +12,93 @@ drupal_add_js(array(
 * @uses Itonics_Employee_Helper::menu()
 * @return array
 */
-function itonics_employee_list_form($form, $form_state){
+function itonics_employee_list_form($form, &$form_state){
 	
-	$form['add_employee'] = array(
-	  '#type'  => 'link',
-	  '#title' => t('Add Employee link'),
-	  '#href'  => Itonics_Employee_Helper::menu('add'),
-	);
+	$path = current_path();
+	if(isset( $form_state['storage']['confirm'])){
 
-    $header = array(
-		'sn'      => array('data' => t('S.N'), 'field' => 'e.id'),
-		'profile_picture' => t('Profile Picture'),
-		'name'    => array('data' => t('Name'), 'field' => 'e.name'),
-		'address' => array('data' => t('Address'), 'field' => 'e.address'),
-		'email'   => array('data' => t('Email'), 'field' => 'e.email'),
-		'gender'  => array('data' => t('Gender'), 'field' => 'e.gender'),
-		'action'  => t('Action')
-	);
+		$content = '<h4>Confirmation dialog</h4>';
 
-	$results = Itonics_Employee_Model::get($header);
-    $options = array();
-    foreach( $results as $i => $row ){
+		$form['intro'] = array('#markup' => $content);
 
-    	$img = t('No image');
-    	if(!empty($row->image)){
-    		$file = file_load($row->image);
-    		if($file){
-	    		$path = file_create_url($file->uri);
-	    		$img = '<img src="'. image_style_url('thumbnail', $file->uri) .'"/>';
-    		}
-    	}
+		$title = 'Confirmation';
+		$description ="Do you really want to delete the employee?";
+		$yes = "Ok";
 
-		$options[$row->id] = array(
-			'sn'      => Itonics_Employee_Helper::get_index($i),
-			'profile_picture' => $img,
-			'name'    => check_plain($row->name),
-			'address' => ucfirst(check_plain($row->address)),
-			'email'   => check_plain($row->email),
-			'gender'  => ucfirst(check_plain($row->gender)),
-			'action'  => array(
-				'data' => array(
-					array(
-						'#type'  => 'link',
-						'#title' => t('View / Edit'),
-						'#href'  => Itonics_Employee_Helper::menu('edit') . '/' . check_plain($row->id),
+		return confirm_form($form, $title , $path, $description , $yes);
+		
+	}else{
+
+		$form['add_employee'] = array(
+		  '#type'  => 'link',
+		  '#title' => t('Add Employee link'),
+		  '#href'  => Itonics_Employee_Helper::menu('add'),
+		);
+
+	    $header = array(
+			'sn'      => array('data' => t('S.N'), 'field' => 'e.id'),
+			'profile_picture' => t('Profile Picture'),
+			'name'    => array('data' => t('Name'), 'field' => 'e.name'),
+			'address' => array('data' => t('Address'), 'field' => 'e.address'),
+			'email'   => array('data' => t('Email'), 'field' => 'e.email'),
+			'gender'  => array('data' => t('Gender'), 'field' => 'e.gender'),
+			'action'  => t('Action')
+		);
+
+		$results = Itonics_Employee_Model::get($header);
+	    $options = array();
+	    foreach( $results as $i => $row ){
+
+	    	$img = t('No image');
+	    	if(!empty($row->image)){
+	    		$file = file_load($row->image);
+	    		if($file){
+		    		$img = '<img src="'. image_style_url('thumbnail', $file->uri) .'"/>';
+	    		}
+	    	}
+
+			$options[$row->id] = array(
+				'sn'      => Itonics_Employee_Helper::get_index($i),
+				'profile_picture' => $img,
+				'name'    => check_plain($row->name),
+				'address' => ucfirst(check_plain($row->address)),
+				'email'   => check_plain($row->email),
+				'gender'  => ucfirst(check_plain($row->gender)),
+				'action'  => array(
+					'data' => array(
+						array(
+							'#type'  => 'link',
+							'#title' => t('edit'),
+							'#href'  => Itonics_Employee_Helper::menu('edit') . '/' . $row->id,
+							'#suffix' => ' &nbsp; '
+						),
+						array(
+							'#type' => 'link',
+							'#title' => t('delete'),
+							'#href'  => Itonics_Employee_Helper::menu('delete') . '/' . $row->id,
+							'#options' => array('query'=>array('destination'=>$path))
+						)
 					)
 				)
-			)
-		);
-    }
+			);
+	    }
 
-   	$form['nodes'] = array(
-		'#type'    => 'tableselect',
-		'#header'  => $header,
-		'#options' => $options,
-		'#empty'   => t('No content available.'),
-	);
-
-   	if(count($results) > 0){
-		$form['submit'] = array(
-		   '#type'  => 'submit',
-		   '#value' => t('Delete'),
+	   	$form['nodes'] = array(
+			'#type'    => 'tableselect',
+			'#header'  => $header,
+			'#options' => $options,
+			'#empty'   => t('No content available.'),
 		);
 
-		$form['pager'] = array('#markup' => theme('pager'));
-   	}
+	   	if(count($results) > 0){
+			$form['confirm'] = array(
+			   '#type'  => 'submit',
+			   '#value' => t('Delete'),
+			);
+
+			$form['pager'] = array('#markup' => theme('pager'));
+	   	}
+	}
 
 	return $form;
 }
@@ -103,28 +115,35 @@ function itonics_employee_list_form($form, $form_state){
 * @uses drupal_set_message()
 * @return void
 */
-function itonics_employee_list_form_submit($form, $form_state) {
+function itonics_employee_list_form_submit($form, &$form_state) {
 	
-	$nodes = $form_state['values']['nodes'];
-	$deleted = false;
-	foreach($nodes as $key => $id){
-		if($id > 0){
-			$row = Itonics_Employee_Model::get_by_id($id);
-			if($row){
-				$deleted = Itonics_Employee_Model::delete($id);
-				if($row['image'] > 0){
-					$file = file_load($row['image']);
-					if($file){
-						file_delete($file, true);
+	if( !isset($form_state['storage']['confirm'] )){
+		$form_state['storage']['confirm'] = TRUE;
+		$form_state['storage']['nodes'] = $form_state['values']['nodes'];
+		$form_state['rebuild'] = TRUE;
+	}else{
+		$nodes = $form_state['storage']['nodes'];
+		$deleted = false;
+		foreach($nodes as $key => $id){
+			if($id > 0){
+				$row = Itonics_Employee_Model::get_by_id($id);
+				if($row){
+					$deleted = Itonics_Employee_Model::delete($id);
+					if($row['image'] > 0){
+						$file = file_load($row['image']);
+						if($file){
+							file_delete($file, true);
+						}
 					}
 				}
 			}
 		}
-	}
 
-	if($deleted){
-		drupal_set_message(Itonics_Employee_Helper::msg(7));
-	}else{
-		drupal_set_message(Itonics_Employee_Helper::msg(8),'warning');
+		if($deleted){
+			drupal_set_message(Itonics_Employee_Helper::msg(7));
+		}else{
+			drupal_set_message(Itonics_Employee_Helper::msg(8),'warning');
+		}
 	}
+	
 }
