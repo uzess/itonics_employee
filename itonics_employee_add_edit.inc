@@ -46,7 +46,6 @@ function itonics_employee_add_edit_form($form, $form_state, $edited_row=false){
 		# in 'itonics_employee_add_edit_form_submit' function
 		$form['id'] = array('#type' => 'hidden', '#value' => $edited_row['id']);
 		$form['old_file'] = array('#type' => 'hidden', '#value' => $edited_row['image']);
-
 	}
 
 	$def = function($key) use ($edited_row){
@@ -145,26 +144,6 @@ function itonics_employee_add_edit_form_validate($form, &$form_state) {
 	if(!in_array($form_state['values']['gender'], array_keys($gender))){
 		form_set_error('gender', Itonics_Employee_Helper::msg(11));
 	}
-	foreach(['name','email','projects'] as $v){
-		$form_state['values'][$v] = filter_var($form_state['values'][$v], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-	}
-
-	$ai = $form_state['values']['additional_details']['value'];
-	switch($form_state['values']['additional_details']['format']){
-		case 'plain_text':
-			$ai = check_plain($ai);
-		break;
-
-		case 'filtered_html':
-			$ai = filter_xss($ai);
-		break;
-
-		case 'full_html':
-			$ai = filter_xss_admin($ai);
-		break;
-	}
-	
-	$form_state['values']['additional_details']['value'] = $ai;
 }
 
 /**
@@ -219,7 +198,8 @@ function itonics_employee_add_edit_form_submit($form, $form_state) {
 
 	if( isset($input['id']) ){
 		# Update it
-		$updated = Itonics_Employee_Model::update($fields, $input['id']);
+		$fields['id'] = $input['id'];
+		$updated = Itonics_Employee_Model::save($fields, 'id');
 		if($updated > 0){
 			drupal_set_message(Itonics_Employee_Helper::msg(1));
 		}else{

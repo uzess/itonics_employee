@@ -1,5 +1,4 @@
 <?php
-
 # load database model and helper classes
 module_load_include('php', 'itonics_employee', 'itonics_employee_model');
 module_load_include('php', 'itonics_employee', 'itonics_employee_helper');
@@ -37,8 +36,42 @@ function itonics_employee_menu(){
 	    'access arguments' => array('administer itonics employee'),
 	    'file'             => 'itonics_employee_add_edit.inc'
 	);
+
+	$items[Itonics_Employee_Helper::menu('delete')] = array(
+		'title'            => 'Delete Employee',
+		'description'      => 'Delete employee',
+		'page callback'    => 'drupal_get_form',
+	    'page arguments'   => array('itonics_employee_delete_confirm'),
+	    'access arguments' => array('administer itonics employee'),
+	    'file'             => 'itonics_employee_delete.inc'
+	);
+
+	$items[Itonics_Employee_Helper::menu('view')] = array(
+		'title'            => 'View Employee',
+		'description'      => 'View employee',
+		'page callback'    => 'itonics_employee_view',
+	    'access arguments' => array('administer itonics employee'),
+	    'file'             => 'itonics_employee_view.inc'
+	);
 	
 	return $items;
+}
+
+function itonics_employee_theme( $existing, $type, $theme, $path ){
+	return array(
+		'itonics_employee_template' => array(
+			'variables' => array(
+				'name'     => null,
+				'gender'   => null,
+				'email'    => null,
+				'address'  => null,
+				'projects' => null,
+				'image'    => null,
+				'additional_details' => null,
+			),
+			'template' => 'itonics_employee'
+		)
+	);
 }
 
 /**

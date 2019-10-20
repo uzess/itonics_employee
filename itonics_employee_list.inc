@@ -36,7 +36,7 @@ function itonics_employee_list_form($form, &$form_state){
 		);
 
 	    $header = array(
-			'sn'      => array('data' => t('S.N'), 'field' => 'e.id'),
+			'sn'      => array('data' => t('S.N'), 'field' => 'e.id', 'sort' => 'DESC'),
 			'profile_picture' => t('Profile Picture'),
 			'name'    => array('data' => t('Name'), 'field' => 'e.name'),
 			'address' => array('data' => t('Address'), 'field' => 'e.address'),
@@ -76,7 +76,12 @@ function itonics_employee_list_form($form, &$form_state){
 							'#type' => 'link',
 							'#title' => t('delete'),
 							'#href'  => Itonics_Employee_Helper::menu('delete') . '/' . $row->id,
-							'#options' => array('query'=>array('destination'=>$path))
+							'#suffix' => ' &nbsp; '
+						),
+						array(
+							'#type' => 'link',
+							'#title' => t('view'),
+							'#href'  => Itonics_Employee_Helper::menu('view') . '/' . $row->id,
 						)
 					)
 				)

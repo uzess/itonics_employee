@@ -33,27 +33,8 @@ class Itonics_Employee_Model{
 		return $row;
 	}
 
-	public static function update($fields, $id){
-		$updated = db_update(self::$table)
-			->condition('id', $id)
-			->fields($fields)
-			->execute();
-
-		if($updated){
-			watchdog('itonics_employee', 'Employee ID %id has been updated.', array(
-	        	'%id' => $id,
-	      	));	
-		}	
-		return $updated;
-	}
-
-	public static function save($fields){
-		$id = db_insert(self::$table)->fields($fields)->execute();
-		if($id > 0){
-			watchdog('itonics_employee', 'Employee ID %id has been inserted.', array(
-	        	'%id' => $id,
-	      	));
-		}
+	public static function save($fields, $pk = []){
+		$id = drupal_write_record(self::$table, $fields, $pk);
 		return $id;
 	}
 

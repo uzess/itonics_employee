@@ -20,6 +20,7 @@ class Itonics_Employee_Helper{
 			'list' => 'admin/employee',
 			'add'  => 'admin/employee/add',
 			'edit' => 'admin/employee/edit',
+			'view' => 'employee',
 			'delete' => 'admin/employee/delete',
 		);
 
