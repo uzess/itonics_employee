@@ -1,4 +1,15 @@
 <?php
+/**
+* Implements hook_view
+* @see https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_view/7.x
+* @uses Itonics_Employee_Model::get_by_id()
+* @uses Itonics_Employee_Helper::menu()
+* @uses image_style_url()
+* @uses file_load()
+* @uses drupal_goto()
+* @param $id
+* @return array | void
+*/
 function itonics_employee_view( $id=false ){ 
 	if($id > 0){
 		$row = Itonics_Employee_Model::get_by_id($id);
